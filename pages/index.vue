@@ -1,9 +1,12 @@
 <template>
+  <header>
+    <title>Adhoc Tasks Wiki</title>
+  </header>
   <div>
-    index page
+    
   </div>
 </template>
 
-<style>
+<style lang="scss"> 
 
 </style>

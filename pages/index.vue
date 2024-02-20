@@ -5,9 +5,21 @@
   <div class="main-content">
     <h1 class="text-3xl font-bold">Adhoc Tasks Wiki</h1>
     <hr class="my-4">
-    <!-- Add this button -->
-    <button @click="openModal" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add New Task</button>
-  
+    <div class="flex justify-between items-center">
+      <button @click="openModal" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add New Task</button>
+      <button @click="openLoginModal" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Login</button>
+    </div>
+    <br>
+    <!-- Add this modal -->
+    <div id="loginModal" class="modal" v-show="isLoginModalOpen">
+      <div class="modal-content">
+        <form @submit.prevent="login">
+          <label for="email" class="block mb-1">Email:</label>
+          <input type="email" v-model="email" class="w-full p-2 border border-gray-300 rounded mb-4" placeholder="Enter your email">
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Continue</button>
+        </form>
+      </div>
+    </div>
     <div id="taskModal" class="modal" v-show="isModalOpen">
       <div class="modal-content">
         <br>
@@ -51,9 +63,16 @@
           <td class="border border-gray-400 px-4 py-2">{{ task.givenBy }}</td>
           <td class="border border-gray-400 px-4 py-2">{{ task.givenTo }}</td>
           <td class="border border-gray-400 px-4 py-2">{{ task.givenDate }}</td>
-          <td class="border border-gray-400 px-4 py-2">{{ task.status }}</td>
+          <td class="border border-gray-400 px-4 py-2" style="padding-top: 20px;">
+          <select v-model="task.status" class="w-full p-2 border border-gray-300 rounded mb-4">
+            <option value="pending">Pending</option>
+            <option value="done">Done</option>
+            <option value="work-in-progress">Work in Progress</option>
+            <option value="on-hold">On Hold</option>
+          </select>
+        </td>
           <td class="border border-gray-400 px-4 py-2">
-            <button @click="removeTask(index)" class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600">Remove</button>
+            <button @click="removeTask(index)" class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600" >Remove</button>
           </td>
         </tr>
       </tbody>
@@ -75,9 +94,9 @@
 export default {
   data() {
     return {
-      // Add this property
       isModalOpen: false,
-
+      isLoginModalOpen: false,
+      email: '',
       newTask: {
         taskName: '',
         givenBy: '',
@@ -89,14 +108,22 @@ export default {
     };
   },
   methods: {
-    // Add this method
     openModal() {
       this.isModalOpen = true;
     },
 
-     // Add this method
     closeModal() {
       this.isModalOpen = false;
+    },
+
+    // Add these methods
+    openLoginModal() {
+      this.isLoginModalOpen = true;
+    },
+
+    login() {
+      // Validate the email here if necessary
+      this.isLoginModalOpen = false;
     },
 
     submitTask() {
@@ -105,11 +132,9 @@ export default {
         taskName: '',
         givenBy: '',
         givenTo: '',
-        givenDate: '',
+        givenDate: new Date().toISOString().substr(0, 10),
         status: 'pending'
       };
-
-      // Close the modal after submitting the task
       this.isModalOpen = false;
     },
 

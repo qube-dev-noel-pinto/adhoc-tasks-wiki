@@ -3,16 +3,15 @@
     <title>Adhoc Tasks Wiki</title>
   </header>
   <div class="main-content">
-    <h1 class="text-3xl font-bold">Adhoc Tasks Wiki</h1>
-    <hr class="my-4">
     <div class="flex justify-between items-center">
-      <button @click="openModal" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add New Task</button>
-      <button @click="openLoginModal" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Login</button>
+      <h1 class="text-3xl font-bold">Adhoc Tasks Wiki</h1>
+      <button v-if="!isLoggedIn" @click="openLoginModal" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Login</button>
+      <button v-else @click="logout" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Logout</button>
     </div>
-    <br>
     <!-- Add this modal -->
     <div id="loginModal" class="modal" v-show="isLoginModalOpen">
       <div class="modal-content">
+        <hr class="my-4" />
         <form @submit.prevent="login">
           <label for="email" class="block mb-1">Email:</label>
           <input type="email" v-model="email" class="w-full p-2 border border-gray-300 rounded mb-4" placeholder="Enter your email">
@@ -20,6 +19,14 @@
         </form>
       </div>
     </div>
+    
+    <hr class="my-4">
+
+    <div v-if="isLoggedIn">
+    <div class="flex justify-between items-center">
+      <button @click="openModal" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add New Task</button>
+    </div>
+    
     <div id="taskModal" class="modal" v-show="isModalOpen">
       <div class="modal-content">
         <br>
@@ -88,6 +95,7 @@
     <hr class="my-4">
     <span class="text-blue-500">Created by: Noel P.</span>
   </div>
+  </div>
 </template>
 
 <script>
@@ -96,6 +104,7 @@ export default {
     return {
       isModalOpen: false,
       isLoginModalOpen: false,
+      isLoggedIn: false,
       email: '',
       newTask: {
         taskName: '',
@@ -116,14 +125,20 @@ export default {
       this.isModalOpen = false;
     },
 
-    // Add these methods
     openLoginModal() {
       this.isLoginModalOpen = true;
     },
 
     login() {
-      // Validate the email here if necessary
+      if (this.email === 'noelpinto47@gmail.com') {
+        this.isLoggedIn = true;
+      }
       this.isLoginModalOpen = false;
+    },
+
+    // Add this method
+    logout() {
+      this.isLoggedIn = false;
     },
 
     submitTask() {
@@ -145,8 +160,8 @@ export default {
 };
 </script>
 
-<style lang="scss"> 
-  .main-content{
-    padding: 20px;
-  }
+<style lang="scss">
+.main-content {
+  padding: 20px;
+}
 </style>
